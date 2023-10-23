@@ -1,0 +1,18 @@
+{
+  "pwd": "Test/HW-1/",
+  "submissions": "Submissions/",
+  "reports": "Reports/",
+  "sessions": "Sessions/",
+  "plagiarism": "Plagiarism/",
+  "boilerplate": "Boilerplate/",
+  "session_list": [
+    ["101", "102", "103"],
+    ["104", "105", "106"],
+    ["107", "108", "109"]
+  ],
+  "plagiarism_extensions": [".cpp", ".h", ".hpp"],
+  "plagiarism_threshold": 50,
+  "plagiarism_percentage": 0.4,
+  "session_session_name_format": "Session-{no}",
+  "session_table_name_format": "masa{no}"
+}
