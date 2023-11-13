@@ -2,6 +2,15 @@ import os, shutil
 import zipfile as zip
 from copydetect import CopyDetector
 
+# This function converts extracted files into utf8
+def to_utf8(filepath: str):
+    content = ""
+    with open(filepath, "r") as f:
+        content = f.read()
+    content = content.encode("utf-8")
+    with open(filepath, "wb") as f:
+        f.write(content)
+
 class Plagiarism:
     def __init__(self, config: dict, pwd: str = ""):
         try:
@@ -16,7 +25,7 @@ class Plagiarism:
             self.boilerplate: list[str] = []
             if "boilerplate" in config:
                 path = os.path.join(self.pwd, config["boilerplate"])
-                self.reference.append(path)
+                self.boilerplate.append(path)
 
             self.extensions: list[str]    = config["extensions"]
             self.noise_threshold: int     = config["threshold"]
@@ -25,7 +34,7 @@ class Plagiarism:
 
         except KeyError as e:
             raise RuntimeError(f"Config file requires {e} in \"plagiarism\" entry.")
-        
+
     # This function extracts a student's code into a folder for
     # copy detection. It flattens the file structure. (There was an
     # error in the copydetect tool that results in a self-plagiarism
@@ -39,6 +48,11 @@ class Plagiarism:
                 targetPath = os.path.join(extTo, flatFile)
                 with zfile.open(file) as source, open(targetPath, "wb") as target:
                     shutil.copyfileobj(source, target)
+                try:
+                    to_utf8(targetPath)
+                except (UnicodeEncodeError, UnicodeDecodeError) as e:
+                    print(f"Warning: {targetPath} couldn't be converted to UTF-8. Removing...")
+                    os.remove(targetPath)
 
     # This function extracts each students' code into a folder for copy detection.
     def extract(self, submissions: str):

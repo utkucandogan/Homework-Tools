@@ -162,3 +162,5 @@ cython_debug/
 Test/Plagiarism/
 Test/Session/
 *.html
+Debug/
+config_debug.json
