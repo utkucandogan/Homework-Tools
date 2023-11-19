@@ -159,8 +159,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-Test/Plagiarism/
-Test/Session/
+Examples/Plagiarism/
+Examples/Session/
 *.html
 Debug/
 config_debug.json

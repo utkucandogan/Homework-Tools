@@ -1,6 +1,5 @@
 import os, shutil
 import zipfile as zip
-from copydetect import CopyDetector
 
 # This function converts extracted files into utf8
 def to_utf8(filepath: str):
@@ -77,6 +76,14 @@ class Plagiarism:
 
     # This function checks for plagiarism using copydetect library
     def check(self):
+        try:
+            from copydetect import CopyDetector # unless used, it is not required
+        except ModuleNotFoundError as e:
+            print(f"For plagiarism check \"{e.name}\" module is required!")
+            print("You can install it by running:")
+            print(f"\tpip install {e.name}")
+            exit(1)
+
         detector = CopyDetector(test_dirs=[self.test], ref_dirs=self.reference, boilerplate_dirs=self.boilerplate, extensions=self.extensions,
                                 noise_t=self.noise_threshold, guarantee_t=self.guarantee_threshold, display_t=self.display_threshold,
                                 ignore_leaf=True)

@@ -1,0 +1,28 @@
+{
+  "pwd": "Examples/",
+  "submissions": "Submissions/",
+  "reports": "Reports/",
+
+  "plagiarism": {
+    "pwd": "Plagiarism/",
+    "test": "Test/",
+    "reference": "Reference/",
+    "boilerplate": "Boilerplate/",
+    "extensions": [".c", ".h"],
+    "threshold": 50,
+    "percentage": 0.4
+  },
+
+  "session": {
+    "pwd": "Session/",
+    "sessions": "Sessions/",
+    "session_list": [
+      ["Student1", "Student2", "Student3"],
+      ["Student4", "Student5", "Student6"],
+      ["Student7", "Student8", "Student9"]
+    ],
+    "session_name_format": "Session-{no}",
+    "table_name_format": "masa{no}",
+    "use_folder_name": true
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "pwd": "Test/",
+  "pwd": "Examples/",
   "submissions": "Submissions/",
   "reports": "Reports/",
 
@@ -17,12 +17,11 @@
     "pwd": "Session/",
     "sessions": "Sessions/",
     "session_list": [
-      ["Student1", "Student2", "Student3"],
-      ["Student4", "Student5", "Student6"],
-      ["Student7", "Student8", "Student9"]
+      ["101", "102", "103"],
+      ["104", "105", "106"],
+      ["107", "108", "109"]
     ],
     "session_name_format": "Session-{no}",
-    "table_name_format": "masa{no}",
-    "use_folder_name": true
+    "table_name_format": "{id}"
   }
 }

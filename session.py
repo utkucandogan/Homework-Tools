@@ -17,12 +17,12 @@ class Session:
         
     # This function finds the correct session for the student. In order to function correctly,
     # student's zip file must contain their id in the filename
-    def find(self, filename: str) -> tuple[int, int] | None:
+    def find(self, filename: str) -> tuple[tuple[int, int], str] | tuple[None, None]:
         for i, session in enumerate(self.session_list):
             for j, id in enumerate(session):
                 if id in filename:
-                    return (i+1,j+1)
-        return None
+                    return (i+1,j+1), id
+        return None, None
     
     # This function groups submissions (or reports) into correct subfolders
     def group(self, path: str):
@@ -32,11 +32,11 @@ class Session:
                 continue
 
             if self.use_folder_name:
-                session = self.find(user)
+                session, id = self.find(user)
 
             for file in os.listdir(user):
                 if not self.use_folder_name:
-                    session = self.find(file)
+                    session, id = self.find(file)
 
                 print(f"Processing: {file}")
                 filepath = os.path.join(user, file)
@@ -46,7 +46,7 @@ class Session:
                     os.makedirs(new_path, exist_ok=True)
                 else:
                     session_name = self.session_name_format.format(no=session[0])
-                    table_name = self.table_name_format.format(no=session[1])
+                    table_name = self.table_name_format.format(no=session[1], id=id)
                     new_path = os.path.join(self.sessions, session_name, table_name)
                 shutil.copy2(filepath, new_path)
 
@@ -58,8 +58,8 @@ class Session:
             session_path = os.path.join(self.sessions, session_name)
             os.makedirs(session_path, exist_ok=True)
 
-            for j, _ in enumerate(session):
-                table_name = self.table_name_format.format(no=j+1)
+            for j, id in enumerate(session):
+                table_name = self.table_name_format.format(no=j+1, id=id)
                 table_path = os.path.join(session_path, table_name)
                 os.makedirs(table_path, exist_ok=True)
 
