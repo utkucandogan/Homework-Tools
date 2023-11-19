@@ -16,12 +16,11 @@
   "session": {
     "pwd": "Session/",
     "sessions": "Sessions/",
-    "session_list": [
-      ["101", "102", "103"],
-      ["104", "105", "106"],
-      ["107", "108", "109"]
-    ],
-    "session_name_format": "Session-{no}",
+    "session_list": {
+      "Group-A": ["101", "102", "103"],
+      "Group-B": ["104", "105", "106"],
+      "Group-C": ["107", "108", "109"]
+    },
     "table_name_format": "{id}"
   }
 }
