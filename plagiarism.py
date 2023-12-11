@@ -57,22 +57,17 @@ class Plagiarism:
     def extract(self, submissions: str):
         os.makedirs(self.test, exist_ok=True)
         for folder in os.listdir(submissions):
-            user = os.path.join(submissions, folder)
-            if not os.path.isdir(user):
+            zfile = os.path.join(submissions, folder)
+            print(f"Extracting: {zfile}")
+            if not zfile.endswith(".zip"):
                 continue
 
-            print(f"Extracting: {user}")
-            for file in os.listdir(user):
-                zfile = os.path.join(user, file)
-                if not zfile.endswith(".zip"):
-                    continue
-
-                try:
-                    with zip.ZipFile(zfile) as zf:
-                        extTo = os.path.join(self.test, folder)
-                        self.extract_single(zf, extTo, file)
-                except zip.BadZipFile:
-                    print(f"Warning: {user} has invalid zip file!")
+            try:
+                with zip.ZipFile(zfile) as zf:
+                    extTo = os.path.join(self.test, folder)
+                    self.extract_single(zf, extTo, folder)
+            except zip.BadZipFile:
+                print(f"Warning: {user} has invalid zip file!")
 
     # This function checks for plagiarism using copydetect library
     def check(self):
