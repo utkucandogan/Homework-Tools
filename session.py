@@ -1,10 +1,11 @@
 import os, shutil
 
 class Session:
-    def __init__(self, config: dict, pwd: str = ""):
+    def __init__(self, config: dict, pwd: str = "",single_file: bool = False):
         try:
             self.pwd: str      = os.path.join(pwd, config.get("pwd", ""))
             self.sessions: str = os.path.join(self.pwd, config["sessions"])
+            self.single_file: bool = single_file
 
             self.session_name_format: str = config.get("session_name_format", "Session-{no}")
             self.table_name_format: str   = config.get("table_name_format", "Table-{no}")
@@ -29,25 +30,46 @@ class Session:
     
     # This function groups submissions (or reports) into correct subfolders
     def group(self, path: str):
-        for file in os.listdir(path):
-            user_file = os.path.join(path, file)
+        for folder in os.listdir(path):
+            if(self.single_file):
+                file = folder
+                user_file = os.path.join(path, file)
+                
+                if self.user_file:
+                    session_name, table_no, id = self.find(user_file)
 
-            #if self.use_folder_name:
-            #    session_name, table_no, id = self.find(user)
-
-            if not self.use_folder_name:
-                session_name, table_no, id = self.find(user_file)
-
-            print(f"Processing: {user_file}")
-            filepath = user_file
-            new_path = ""
-            if id is None:
-                new_path = os.path.join(self.sessions, "ERROR", folder)
-                os.makedirs(new_path, exist_ok=True)
+                print(f"Processing: {user_file}")
+                filepath = user_file
+                new_path = ""
+                if id is None:
+                    new_path = os.path.join(self.sessions, "ERROR", folder)
+                    os.makedirs(new_path, exist_ok=True)
+                else:
+                    table_name = self.table_name_format.format(no=table_no, id=id)
+                    new_path = os.path.join(self.sessions, session_name, table_name)
+                shutil.copy2(filepath, new_path)
             else:
-                table_name = self.table_name_format.format(no=table_no, id=id)
-                new_path = os.path.join(self.sessions, session_name, table_name)
-            shutil.copy2(filepath, new_path)
+                user = os.path.join(path, folder)
+                if not os.path.isdir(user):
+                    continue
+
+                if self.use_folder_name:
+                    session_name, table_no, id = self.find(user)
+
+                for file in os.listdir(user):
+                    if not self.use_folder_name:
+                        session_name, table_no, id = self.find(file)
+
+                    print(f"Processing: {file}")
+                    filepath = os.path.join(user, file)
+                    new_path = ""
+                    if id is None:
+                        new_path = os.path.join(self.sessions, "ERROR", folder)
+                        os.makedirs(new_path, exist_ok=True)
+                    else:
+                        table_name = self.table_name_format.format(no=table_no, id=id)
+                        new_path = os.path.join(self.sessions, session_name, table_name)
+                    shutil.copy2(filepath, new_path)    
 
     # This function creates folders and groups all the submissions
     def create(self, submissions: list[str]):

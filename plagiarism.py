@@ -11,10 +11,11 @@ def to_utf8(filepath: str):
         f.write(content)
 
 class Plagiarism:
-    def __init__(self, config: dict, pwd: str = ""):
+    def __init__(self, config: dict, pwd: str = "", single_file: bool = False):
         try:
             self.pwd: str  = os.path.join(pwd, config.get("pwd", ""))
             self.test: str = os.path.join(self.pwd, config["test"])
+            self.single_file: bool = single_file
 
             self.reference: list[str] = [self.test]
             if "reference" in config:
@@ -57,17 +58,33 @@ class Plagiarism:
     def extract(self, submissions: str):
         os.makedirs(self.test, exist_ok=True)
         for folder in os.listdir(submissions):
-            zfile = os.path.join(submissions, folder)
-            print(f"Extracting: {zfile}")
-            if not zfile.endswith(".zip"):
-                continue
+            if(self.single_file):
+                zfile = os.path.join(submissions, folder)
+                print(f"Extracting: {zfile}")
+                if not zfile.endswith(".zip"):
+                    continue
+                try:
+                    with zip.ZipFile(zfile) as zf:
+                        extTo = os.path.join(self.test, folder)
+                        self.extract_single(zf, extTo, folder)
+                except zip.BadZipFile:
+                    print(f"Warning: {folder} has invalid zip file!")
+            else:
+                user = os.path.join(submissions, folder)
+                if not os.path.isdir(user):        
+                    continue
+                print(f"Extracting: {user}")
+                for file in os.listdir(user):
+                    zfile = os.path.join(user, file)
+                    if not zfile.endswith(".zip"):
+                        continue
 
-            try:
-                with zip.ZipFile(zfile) as zf:
-                    extTo = os.path.join(self.test, folder)
-                    self.extract_single(zf, extTo, folder)
-            except zip.BadZipFile:
-                print(f"Warning: {user} has invalid zip file!")
+                    try:
+                        with zip.ZipFile(zfile) as zf:
+                            extTo = os.path.join(self.test, folder)
+                            self.extract_single(zf, extTo, file)
+                    except zip.BadZipFile:
+                        print(f"Warning: {user} has invalid zip file!")
 
     # This function checks for plagiarism using copydetect library
     def check(self):

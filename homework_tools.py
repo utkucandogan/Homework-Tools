@@ -9,21 +9,25 @@ class HomeworkTools:
             self.pwd: str      = config.get("pwd", "")
             self.submissions: str = os.path.join(self.pwd, config["submissions"])
 
+            if "single_file" in config:
+                self.single_file = config["single_file"]
+            else:
+                self.single_file = False    
             if "reports" in config:
                 self.reports = os.path.join(self.pwd, config["reports"])
             else:
                 self.reports = None
 
             if "plagiarism" in config:
-                self.plagiarism = Plagiarism(config["plagiarism"], self.pwd)
+                self.plagiarism = Plagiarism(config["plagiarism"], self.pwd, self.single_file)
             else:
                 self.plagiarism = None
 
             if "session" in config:
-                self.session = Session(config["session"], self.pwd)
+                self.session = Session(config["session"], self.pwd, self.single_file)
             else:
                 self.session = None
-
+            
         except KeyError as e:
             raise RuntimeError(f"Config file requires {e}.")
 
