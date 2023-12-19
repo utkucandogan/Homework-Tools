@@ -11,12 +11,13 @@ def to_utf8(filepath: str):
         f.write(content)
 
 class Plagiarism:
-    def __init__(self, config: dict, pwd: str = "", single_file: bool = False):
+    def __init__(self, config: dict, pwd: str = "", single_file: bool = False, file_filter: list = []):
         try:
             self.pwd: str  = os.path.join(pwd, config.get("pwd", ""))
             self.test: str = os.path.join(self.pwd, config["test"])
             self.single_file: bool = single_file
-
+            self.file_filter: list = file_filter
+            
             self.reference: list[str] = [self.test]
             if "reference" in config:
                 path = os.path.join(self.pwd, config["reference"])
@@ -44,6 +45,9 @@ class Plagiarism:
         os.makedirs(extTo, exist_ok=True)
         for file in zfile.namelist():
             if file.endswith(tuple(self.extensions)):
+                if(self.file_filter):
+                    if not any(filter in file for filter in self.file_filter):
+                        continue
                 flatFile = prefix + "%" + file.replace("/", "%").replace("\\", "%")
                 targetPath = os.path.join(extTo, flatFile)
                 with zfile.open(file) as source, open(targetPath, "wb") as target:

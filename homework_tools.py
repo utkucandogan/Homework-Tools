@@ -8,7 +8,9 @@ class HomeworkTools:
         try:
             self.pwd: str      = config.get("pwd", "")
             self.submissions: str = os.path.join(self.pwd, config["submissions"])
-
+            
+            if "file_filter" in config:
+                self.file_filter = config["file_filter"]
             if "single_file" in config:
                 self.single_file = config["single_file"]
             else:
@@ -19,7 +21,7 @@ class HomeworkTools:
                 self.reports = None
 
             if "plagiarism" in config:
-                self.plagiarism = Plagiarism(config["plagiarism"], self.pwd, self.single_file)
+                self.plagiarism = Plagiarism(config["plagiarism"], self.pwd, self.single_file,self.file_filter)
             else:
                 self.plagiarism = None
 

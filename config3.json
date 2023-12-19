@@ -1,0 +1,31 @@
+{
+  "pwd": "Examples/",
+  "submissions": "Submissions/",
+  "reports": "Reports/",
+
+  "single_file":true,
+  "file_filter": [],
+  
+  "plagiarism": {
+    "pwd": "Plagiarism/",
+    "test": "Test/",
+    "reference": "Reference/",
+    "boilerplate": "Boilerplate/",
+    "extensions": [".py"],
+    "threshold": 50,
+    "percentage": 0.4
+  },
+
+  "session": {
+    "pwd": "Session/",
+    "sessions": "Sessions/",
+    "session_list": {
+	"TUE1140": ["goksel ucak", "hilmi taskin", "hasan yasin cetin", "mustafa yilmaz", "mehmet emin tas", "deniz avci", "talha basbozkurt", "elif sezin yonga", "mert uzmez", "ali osman berktug bastepe", "mubeen ahmad fayyaz", "nazrin taba-tabai", "syed muhammad farrukh aijaz", "abdullah emir gogusdere", "oguzhan yuksel", "mustafa cirak"],
+	"WED0840": ["nida aykut", "eren akcanal", "emir inan", "caglar umut ozten", "ahmet can yulaf", "merve nur zembil", "ahmet akman", "arda alniak", "barkin ergur", "emirhan koca", "midhat memisoglu", "engin berk ozbay", "mustafa sertac satiroglu", "arda yaldiz", "osama awad", "doruk yazici"],
+	"WED1140": ["can ekmekci", "huseyin necdet devrekoglu", "caner aydin", "mehmet tarik coban", "alkim domeke","EMPTY","ahmet yasin kirmizigul", "muhammed yusuf taser", "furkan turac", "sait yilmaz", "vusal novruzov", "ata oguz tanrikulu", "arda unver", "loai mustafa ali ben zaghta", "tan cagatay acar"], 
+	"THU1040": ["bilal yuksu", "asim emre cerrah", "ozden ozel", "hossam khaled a. a. soliman", "anil arda", "miktat durmus", "gokhan erdogan", "ali osman kaya", "omer ozer", "nilgun uzun", "rabia nur unsal", "zulkifl ahmad dar", "ismail enes bulbul", "ahmet erturkmen", "mehmet kurt"], 
+	"FRI1340": ["yunis emre kizildag", "christopher cem maffin", "irfan emre demiray", "abdullah berkay cetiner", "omer mert baloglu", "taner emre gonen", "ezgi sena karabacak", "mustafa kemal ozdemir", "utku boran unal", "baran aydin", "ahmet caner akar", "yahya alp akcay", "hasan oguzhan gok", "ahmet utku saglam", "melike selamet", "noyan alakoc"]},
+    "table_name_format": "masa{no}",
+	"use_folder_name": false
+  }
+}
