@@ -35,7 +35,7 @@ class Session:
                 file = folder
                 user_file = os.path.join(path, file)
                 
-                if self.user_file:
+                if user_file:
                     session_name, table_no, id = self.find(user_file)
 
                 print(f"Processing: {user_file}")
