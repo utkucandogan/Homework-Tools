@@ -46,7 +46,7 @@ class Plagiarism:
         for file in zfile.namelist():
             if file.endswith(tuple(self.extensions)):
                 if(self.file_filter):
-                    if not any(filter in file for filter in self.file_filter):
+                    if not any(filter.casefold() in file.casefold() for filter in self.file_filter):
                         continue
                 flatFile = prefix + "%" + file.replace("/", "%").replace("\\", "%")
                 targetPath = os.path.join(extTo, flatFile)
