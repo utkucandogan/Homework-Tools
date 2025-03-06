@@ -2,7 +2,7 @@ import os
 
 from plagiarism import Plagiarism
 from session import Session
-
+from testbench import TestBench
 class HomeworkTools:
     def __init__(self, config: dict):
         try:
@@ -25,6 +25,11 @@ class HomeworkTools:
             else:
                 self.plagiarism = None
 
+            if "testbench" in config:
+                self.testbench = TestBench(config["testbench"], self.pwd, self.single_file,self.file_filter)
+            else:
+                self.plagiarism = None
+
             if "session" in config:
                 self.session = Session(config["session"], self.pwd, self.single_file)
             else:
@@ -38,6 +43,12 @@ class HomeworkTools:
         if self.plagiarism is None:
             raise RuntimeError("HomeworkTools didn't configured for plagiarism.")
         self.plagiarism.extract(self.submissions)
+
+        # This function extracts each students' code into a folder for autoamted cocotb tests.
+    def testbench_extract(self):
+        if self.testbench is None:
+            raise RuntimeError("HomeworkTools didn't configured for testbench.")
+        self.testbench.extract(self.submissions)
 
     # This function checks for plagiarism using copydetect library
     def plagiarism_check(self):

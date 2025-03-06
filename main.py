@@ -3,7 +3,7 @@ import argparse, json
 from homework_tools import HomeworkTools as HT
 
 if __name__ == "__main__":
-    commands = ["plagiarism:extract", "plagiarism:check", "session:group"]
+    commands = ["plagiarism:extract", "plagiarism:check", "session:group","testbench:extract"]
 
     parser = argparse.ArgumentParser(description="General tools for TAs.")
     parser.add_argument("-c","--config", default="config.json", help="Config file to define variables", metavar="filepath")
@@ -18,6 +18,8 @@ if __name__ == "__main__":
 
         if args.command == "plagiarism:extract":
             ht.plagiarism_extract()
+        if args.command == "testbench:extract":
+            ht.testbench_extract()
         elif args.command == "plagiarism:check":
             ht.plagiarism_check()
         elif args.command == "session:group":

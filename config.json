@@ -3,7 +3,7 @@
   "submissions": "Submissions/",
   "reports": "Reports/",
 
-  "single_file":true,
+  "single_file":false,
   "file_filter": [],
   
   "plagiarism": {
@@ -11,10 +11,15 @@
     "test": "Test/",
     "reference": "Reference/",
     "boilerplate": "Boilerplate/",
-    "extensions": [".py"],
+    "extensions": [".v"],
     "threshold": 50,
     "percentage": 0.4
   },
+	"testbench": {
+	"pwd": "Testbench/",
+	"test": "codes/",
+	"extensions": [".v"]
+	},
 
   "session": {
     "pwd": "Session/",
