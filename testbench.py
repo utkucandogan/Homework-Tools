@@ -28,7 +28,7 @@ class TestBench:
         for file in zfile.namelist():
             if file.endswith(tuple(self.extensions)):
                 file_name = os.path.basename(file)  # Preserve original file name
-                if self.file_filter and not any(filter.casefold() in file_name.casefold() for filter in self.file_filter):
+                if self.file_filter and os.path.splitext(file_name)[0] not in self.file_filter:
                     continue
                 
                 targetPath = os.path.join(extTo, file_name)
