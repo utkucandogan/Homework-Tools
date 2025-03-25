@@ -29,8 +29,7 @@ class TestBench:
             if file.endswith(tuple(self.extensions)):
                 file_name = os.path.basename(file)  # Preserve original file name
                 if self.file_filter and os.path.splitext(file_name)[0] not in self.file_filter:
-                    continue
-                
+                    continue               
                 targetPath = os.path.join(extTo, file_name)
                 with zfile.open(file) as source, open(targetPath, "wb") as target:
                     shutil.copyfileobj(source, target)
@@ -38,8 +37,8 @@ class TestBench:
                 try:
                     to_utf8(targetPath)
                 except (UnicodeEncodeError, UnicodeDecodeError):
-                    print(f"Warning: {targetPath} couldn't be converted to UTF-8. Removing...")
-                    os.remove(targetPath)
+                    print(f"Warning: {targetPath} couldn't be converted to UTF-8")
+                    #os.remove(targetPath)
 
     def extract(self, submissions: str):
         os.makedirs(self.test, exist_ok=True)
