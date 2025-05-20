@@ -1,14 +1,20 @@
 import os, shutil
 import zipfile as zip
+import chardet
 
 # This function converts extracted files into utf8
 def to_utf8(filepath: str):
-    content = ""
-    with open(filepath, "r") as f:
-        content = f.read()
-    content = content.encode("utf-8")
+    with open(filepath, "rb") as f:
+        raw_data = f.read()
+    # Find file's encoding and decode with it
+    result = chardet.detect(raw_data)
+    encoding = result['encoding']
+    #print(f"Detected encoding: {encoding} (confidence: {result['confidence']})")
+    content = raw_data.decode(encoding)
+
+    # Encode and save as utf-8
     with open(filepath, "wb") as f:
-        f.write(content)
+        f.write(content.encode("utf-8"))
 
 class Plagiarism:
     def __init__(self, config: dict, pwd: str = "", single_file: bool = False, file_filter: list = []):
