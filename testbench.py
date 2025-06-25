@@ -1,14 +1,7 @@
 import os, shutil
 import zipfile as zip
 
-# This function converts extracted files into utf8
-def to_utf8(filepath: str):
-    content = ""
-    with open(filepath, "r") as f:
-        content = f.read()
-    content = content.encode("utf-8")
-    with open(filepath, "wb") as f:
-        f.write(content)
+from common import to_utf8
 
 class TestBench:
     def __init__(self, config: dict, pwd: str = "", single_file: bool = False, file_filter: list = []):
@@ -17,7 +10,7 @@ class TestBench:
             self.test: str = os.path.join(self.pwd, config["test"])
             self.single_file: bool = single_file
             self.file_filter: list = file_filter
-            
+
             self.extensions: list[str] = config["extensions"]
         except KeyError as e:
             raise RuntimeError(f"Config file requires {e} in \"testbench\" entry.")
@@ -29,16 +22,16 @@ class TestBench:
             if file.endswith(tuple(self.extensions)):
                 file_name = os.path.basename(file)  # Preserve original file name
                 if self.file_filter and os.path.splitext(file_name)[0] not in self.file_filter:
-                    continue               
+                    continue
                 targetPath = os.path.join(extTo, file_name)
                 with zfile.open(file) as source, open(targetPath, "wb") as target:
                     shutil.copyfileobj(source, target)
-                
+
                 try:
                     to_utf8(targetPath)
-                except (UnicodeEncodeError, UnicodeDecodeError):
-                    print(f"Warning: {targetPath} couldn't be converted to UTF-8")
-                    #os.remove(targetPath)
+                except UnicodeError as e:
+                    print(f"Warning: {targetPath} couldn't be converted to UTF-8. Error: {e} \n Removing...")
+                    os.remove(targetPath)
 
     def extract(self, submissions: str):
         os.makedirs(self.test, exist_ok=True)
@@ -57,7 +50,7 @@ class TestBench:
                     print(f"Warning: {folder} has invalid zip file!")
             else:
                 user = os.path.join(submissions, folder)
-                if not os.path.isdir(user):        
+                if not os.path.isdir(user):
                     continue
                 print(f"Extracting: {user}")
                 for file in os.listdir(user):

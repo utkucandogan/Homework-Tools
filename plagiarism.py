@@ -1,33 +1,7 @@
 import os, shutil
 import zipfile as zip
-import chardet
 
-# This function converts extracted files into utf8
-def to_utf8(filepath: str):
-    with open(filepath, "rb") as f:
-        raw_data = f.read()
-    # Guess file's encoding
-    result = chardet.detect(raw_data) # Chardet mostly detects the encoding correctly, but sometimes doesn't
-    encoding = result['encoding']
-
-    # Try to decode the data
-    content = None
-    for i, enc in enumerate([encoding]+["ascii", "windows-1254", "windows-1252", "utf-8", "utf-16", "utf-32", "iso-8859-1", "iso-8859-9"]):
-        if(enc is None): #Chardet can return encoding=None
-            continue
-        try:
-            content = raw_data.decode(enc)
-            if(i>0): # If chardet suggested encoding was wrong
-                print(f"Correct encoding found at {i+1}th try: {enc}")
-            break
-        except UnicodeDecodeError:
-            pass
-    if(content is None):
-        raise UnicodeDecodeError("multiple-encodings", raw_data, 0, len(raw_data), f"Could not decode the raw file after many attempts")
-    
-    # Encode and save as utf-8
-    with open(filepath, "wb") as f:
-        f.write(content.encode("utf-8"))
+from common import to_utf8
 
 class Plagiarism:
     def __init__(self, config: dict, pwd: str = "", single_file: bool = False, file_filter: list = []):
@@ -36,7 +10,7 @@ class Plagiarism:
             self.test: str = os.path.join(self.pwd, config["test"])
             self.single_file: bool = single_file
             self.file_filter: list = file_filter
-            
+
             self.reference: list[str] = [self.test]
             if "reference" in config:
                 path = os.path.join(self.pwd, config["reference"])
@@ -64,7 +38,7 @@ class Plagiarism:
         os.makedirs(extTo, exist_ok=True)
         for file in zfile.namelist():
             if file.endswith(tuple(self.extensions)):
-                if(self.file_filter):
+                if self.file_filter:
                     #To only look at the file name and not the path
                     file_name = os.path.basename(file)
                     if not any(filter.casefold() in file_name.casefold() for filter in self.file_filter):
@@ -75,7 +49,7 @@ class Plagiarism:
                     shutil.copyfileobj(source, target)
                 try:
                     to_utf8(targetPath)
-                except (UnicodeEncodeError, UnicodeDecodeError) as e:
+                except UnicodeError as e:
                     print(f"Warning: {targetPath} couldn't be converted to UTF-8. Error: {e} \n Removing...")
                     os.remove(targetPath)
 
@@ -83,7 +57,7 @@ class Plagiarism:
     def extract(self, submissions: str):
         os.makedirs(self.test, exist_ok=True)
         for folder in os.listdir(submissions):
-            if(self.single_file):
+            if self.single_file:
                 zfile = os.path.join(submissions, folder)
                 print(f"Extracting: {zfile}")
                 if not zfile.endswith(".zip"):
@@ -96,7 +70,7 @@ class Plagiarism:
                     print(f"Warning: {folder} has invalid zip file!")
             else:
                 user = os.path.join(submissions, folder)
-                if not os.path.isdir(user):        
+                if not os.path.isdir(user):
                     continue
                 print(f"Extracting: {user}")
                 for file in os.listdir(user):
