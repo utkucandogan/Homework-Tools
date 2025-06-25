@@ -28,7 +28,7 @@ class HomeworkTools:
             if "testbench" in config:
                 self.testbench = TestBench(config["testbench"], self.pwd, self.single_file,self.file_filter)
             else:
-                self.plagiarism = None
+                self.testbench = None
 
             if "session" in config:
                 self.session = Session(config["session"], self.pwd, self.single_file)
@@ -44,7 +44,7 @@ class HomeworkTools:
             raise RuntimeError("HomeworkTools didn't configured for plagiarism.")
         self.plagiarism.extract(self.submissions)
 
-        # This function extracts each students' code into a folder for autoamted cocotb tests.
+    # This function extracts each students' code into a folder for automated cocotb tests.
     def testbench_extract(self):
         if self.testbench is None:
             raise RuntimeError("HomeworkTools didn't configured for testbench.")
