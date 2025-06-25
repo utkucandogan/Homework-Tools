@@ -5,7 +5,7 @@
 
   "single_file":false,
   "file_filter": [],
-  
+
   "plagiarism": {
     "pwd": "Plagiarism/",
     "test": "Test/",
@@ -15,11 +15,12 @@
     "threshold": 50,
     "percentage": 0.4
   },
-	"testbench": {
-	"pwd": "Testbench/",
-	"test": "codes/",
-	"extensions": [".v"]
-	},
+
+  "testbench": {
+    "pwd": "Testbench/",
+    "test": "codes/",
+    "extensions": [".v"]
+  },
 
   "session": {
     "pwd": "Session/",
@@ -27,8 +28,8 @@
     "session_list": {
 	"TUE1140": ["studentx","studenty"],
 	"WED0840": ["studentx","studenty"],
-	"WED1140": ["studentx","studenty"], 
-	"THU1040": ["studentx","studenty"], 
+	"WED1140": ["studentx","studenty"],
+	"THU1040": ["studentx","studenty"],
 	"FRI1340": ["studentx","studenty"]},
     "table_name_format": "masa{no}",
 	"use_folder_name": false
