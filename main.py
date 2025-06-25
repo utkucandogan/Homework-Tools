@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
         if args.command == "plagiarism:extract":
             ht.plagiarism_extract()
-        if args.command == "testbench:extract":
+        elif args.command == "testbench:extract":
             ht.testbench_extract()
         elif args.command == "plagiarism:check":
             ht.plagiarism_check()

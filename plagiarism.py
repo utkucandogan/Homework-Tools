@@ -1,14 +1,7 @@
 import os, shutil
 import zipfile as zip
 
-# This function converts extracted files into utf8
-def to_utf8(filepath: str):
-    content = ""
-    with open(filepath, "r") as f:
-        content = f.read()
-    content = content.encode("utf-8")
-    with open(filepath, "wb") as f:
-        f.write(content)
+from common import to_utf8
 
 class Plagiarism:
     def __init__(self, config: dict, pwd: str = "", single_file: bool = False, file_filter: list = []):
@@ -17,7 +10,7 @@ class Plagiarism:
             self.test: str = os.path.join(self.pwd, config["test"])
             self.single_file: bool = single_file
             self.file_filter: list = file_filter
-            
+
             self.reference: list[str] = [self.test]
             if "reference" in config:
                 path = os.path.join(self.pwd, config["reference"])
@@ -45,7 +38,7 @@ class Plagiarism:
         os.makedirs(extTo, exist_ok=True)
         for file in zfile.namelist():
             if file.endswith(tuple(self.extensions)):
-                if(self.file_filter):
+                if self.file_filter:
                     #To only look at the file name and not the path
                     file_name = os.path.basename(file)
                     if not any(filter.casefold() in file_name.casefold() for filter in self.file_filter):
@@ -56,15 +49,15 @@ class Plagiarism:
                     shutil.copyfileobj(source, target)
                 try:
                     to_utf8(targetPath)
-                except (UnicodeEncodeError, UnicodeDecodeError) as e:
-                    print(f"Warning: {targetPath} couldn't be converted to UTF-8. Removing...")
+                except UnicodeError as e:
+                    print(f"Warning: {targetPath} couldn't be converted to UTF-8. Error: {e} \n Removing...")
                     os.remove(targetPath)
 
     # This function extracts each students' code into a folder for copy detection.
     def extract(self, submissions: str):
         os.makedirs(self.test, exist_ok=True)
         for folder in os.listdir(submissions):
-            if(self.single_file):
+            if self.single_file:
                 zfile = os.path.join(submissions, folder)
                 print(f"Extracting: {zfile}")
                 if not zfile.endswith(".zip"):
@@ -77,7 +70,7 @@ class Plagiarism:
                     print(f"Warning: {folder} has invalid zip file!")
             else:
                 user = os.path.join(submissions, folder)
-                if not os.path.isdir(user):        
+                if not os.path.isdir(user):
                     continue
                 print(f"Extracting: {user}")
                 for file in os.listdir(user):
