@@ -1,28 +1,26 @@
-import chardet
 
 # This function converts extracted files into utf8
 def to_utf8(filepath: str):
     with open(filepath, "rb") as f:
         raw_data = f.read()
-    # Guess file's encoding
-    result = chardet.detect(raw_data) # Chardet mostly detects the encoding correctly, but sometimes doesn't
-    encoding = result['encoding']
+    
+    # I tried to use chardet.detect() first. It was slow, and returned encoding was commonly wrong, None, or even didn't exist.
+    # It is faster and more reliable to try the following list containing all 97 encodings in python.
 
-    # Try to decode the data
+    # List is valid for python 3.8-3.13 and taken from https://stackoverflow.com/questions/1728376/get-a-list-of-all-the-encodings-python-can-encode-to
+    all_encodings =["ascii", "cp1254", "cp1252", "utf_8", "utf_16", "utf_32", "latin_1", "iso8859_9",   # More likely encodings first
+                    "big5", "big5hkscs", "cp037", "cp273", "cp424", "cp437", "cp500", "cp720", "cp737", "cp775", "cp850", "cp852", "cp855", "cp856", "cp857", "cp858", "cp860", "cp861", "cp862", "cp863", "cp864", "cp865", "cp866", "cp869", "cp874", "cp875", "cp932", "cp949", "cp950", "cp1006", "cp1026", "cp1125", "cp1140", "cp1250", "cp1251", "cp1253", "cp1255", "cp1256", "cp1257", "cp1258", "euc_jp", "euc_jis_2004", "euc_jisx0213", "euc_kr", "gb2312", "gbk", "gb18030", "hz", "iso2022_jp", "iso2022_jp_1", "iso2022_jp_2", "iso2022_jp_2004", "iso2022_jp_3", "iso2022_jp_ext", "iso2022_kr", "iso8859_2", "iso8859_3", "iso8859_4", "iso8859_5", "iso8859_6", "iso8859_7", "iso8859_8", "iso8859_10", "iso8859_11", "iso8859_13", "iso8859_14", "iso8859_15", "iso8859_16", "johab", "koi8_r", "koi8_t", "koi8_u", "kz1048", "mac_cyrillic", "mac_greek", "mac_iceland", "mac_latin2", "mac_roman", "mac_turkish", "ptcp154", "shift_jis", "shift_jis_2004", "shift_jisx0213", "utf_32_be", "utf_32_le", "utf_16_be", "utf_16_le", "utf_7", "utf_8_sig"]
+    # In the list, "latin_1" defines a character for every byte value (0-255). Therefore every file can be decoded by it without error.
     content = None
-    for i, enc in enumerate([ encoding ] + [ "ascii", "windows-1254", "windows-1252", "utf-8", "utf-16", "utf-32", "iso-8859-1", "iso-8859-9" ]):
-        if enc is None: # Chardet can return encoding=None
-            continue
+    for i, enc in enumerate(all_encodings):
         try:
             content = raw_data.decode(enc)
-            if i > 0: # If chardet suggested encoding was wrong
-                print(f"Info: Correct encoding for {filepath} found at {i + 1}th try: {enc}")
-            break
-        except UnicodeDecodeError:
+        except Exception: #UnicodeDecodeError
             pass
-    else:
-        raise UnicodeDecodeError("multiple-encodings", raw_data, 0, len(raw_data), f"Could not decode the raw file after many attempts")
-
+    
+    if(content is None):
+        raise UnicodeDecodeError("all-encodings", raw_data, 0, len(raw_data), f"Could not decode the raw file with any encoding")
+    
     # Encode and save as utf-8
     with open(filepath, "wb") as f:
         f.write(content.encode("utf-8"))
