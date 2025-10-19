@@ -52,10 +52,11 @@ class Session:
                 user = os.path.join(path, folder)
                 if not os.path.isdir(user):
                     continue
-
+                #If use_folder_name flag is asserted we use the folder's name for search
                 if self.use_folder_name:
                     session_name, table_no, id = self.find(user)
 
+                #Regardless of file or folder name for matching, go over each file in the folder to extract
                 for file in os.listdir(user):
                     if not self.use_folder_name:
                         session_name, table_no, id = self.find(file)

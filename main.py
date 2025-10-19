@@ -11,7 +11,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        with open(args.config, "r") as fp:
+        with open(args.config, "r", encoding="utf-8") as fp:
             config = json.load(fp)
 
         ht = HT(config)
