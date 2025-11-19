@@ -4,10 +4,11 @@ import zipfile as zip
 from common import to_utf8
 
 class Plagiarism:
-    def __init__(self, config: dict, pwd: str = "", single_file: bool = False, file_filter: list = []):
+    def __init__(self, config: dict, pwd: str = "", zip_file: bool = True, single_file: bool = False, file_filter: list = []):
         try:
             self.pwd: str  = os.path.join(pwd, config.get("pwd", ""))
             self.test: str = os.path.join(self.pwd, config["test"])
+            self.zip_file: bool = zip_file
             self.single_file: bool = single_file
             self.file_filter: list = file_filter
 
@@ -28,13 +29,19 @@ class Plagiarism:
 
         except KeyError as e:
             raise RuntimeError(f"Config file requires {e} in \"plagiarism\" entry.")
+        
+    def extract(self, submissions: str):
+        if self.zip_file:
+            self.zip_extract(submissions)
+        else:
+            self.folder_extract(submissions)
 
     # This function extracts a student's code into a folder for
     # copy detection. It flattens the file structure. (There was an
     # error in the copydetect tool that results in a self-plagiarism
     # if a student used the same code in multiple places under different
     # folders. I did not check if this error is fixed.)
-    def extract_single(self, zfile: zip.ZipFile, extTo: str, prefix: str):
+    def zip_extract_single(self, zfile: zip.ZipFile, extTo: str, prefix: str):
         os.makedirs(extTo, exist_ok=True)
         for file in zfile.namelist():
             if file.endswith(tuple(self.extensions)):
@@ -54,7 +61,7 @@ class Plagiarism:
                     os.remove(targetPath)
 
     # This function extracts each students' code into a folder for copy detection.
-    def extract(self, submissions: str):
+    def zip_extract(self, submissions: str):
         os.makedirs(self.test, exist_ok=True)
         for folder in os.listdir(submissions):
             if self.single_file:
@@ -65,7 +72,7 @@ class Plagiarism:
                 try:
                     with zip.ZipFile(zfile) as zf:
                         extTo = os.path.join(self.test, folder)
-                        self.extract_single(zf, extTo, folder)
+                        self.zip_extract_single(zf, extTo, folder)
                 except zip.BadZipFile:
                     print(f"Warning: {folder} has invalid zip file!")
             else:
@@ -84,6 +91,36 @@ class Plagiarism:
                             self.extract_single(zf, extTo, file)
                     except zip.BadZipFile:
                         print(f"Warning: {user} has invalid zip file!")
+
+    # Github classroom, does not use zip files, we need to iterate folder structure
+    def folder_extract_single(self, student_folder: zip.ZipFile, extTo: str):
+        os.makedirs(extTo, exist_ok=True)
+        for root, dirs, files in os.walk(student_folder):
+            rel_root = os.path.relpath(root, student_folder)
+            if rel_root == ".":
+                rel_root = ""
+
+            for name in files:
+                if not name.endswith(tuple(self.extensions)):
+                    continue
+
+                if self.file_filter:
+                    if not any(filter.casefold() in name.casefold() for filter in self.file_filter):
+                        continue
+
+                source = os.path.join(root, name)
+                flatFile = os.path.join(rel_root, name).replace("/", "%").replace("\\", "%")
+                target = os.path.join(extTo, flatFile)
+                shutil.copyfile(source, target)
+
+    def folder_extract(self, submissions: str):
+        os.makedirs(self.test, exist_ok=True)
+        for folder in os.listdir(submissions):
+            student_folder = os.path.join(submissions, folder)
+            extTo = os.path.join(self.test, folder)
+
+            print(f"Extracting: {folder}")
+            self.folder_extract_single(student_folder, extTo)
 
     # This function checks for plagiarism using copydetect library
     def check(self):

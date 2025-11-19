@@ -11,22 +11,29 @@ class HomeworkTools:
             
             if "file_filter" in config:
                 self.file_filter = config["file_filter"]
+
+            if "zip_file" in config:
+                self.zip_file = config["zip_file"]
+            else:
+                self.zip_file = True
+
             if "single_file" in config:
                 self.single_file = config["single_file"]
             else:
-                self.single_file = False    
+                self.single_file = False
+
             if "reports" in config:
                 self.reports = os.path.join(self.pwd, config["reports"])
             else:
                 self.reports = None
 
             if "plagiarism" in config:
-                self.plagiarism = Plagiarism(config["plagiarism"], self.pwd, self.single_file,self.file_filter)
+                self.plagiarism = Plagiarism(config["plagiarism"], self.pwd, self.zip_file, self.single_file, self.file_filter)
             else:
                 self.plagiarism = None
 
             if "testbench" in config:
-                self.testbench = TestBench(config["testbench"], self.pwd, self.single_file,self.file_filter)
+                self.testbench = TestBench(config["testbench"], self.pwd, self.single_file, self.file_filter)
             else:
                 self.testbench = None
 
