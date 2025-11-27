@@ -88,7 +88,7 @@ class Plagiarism:
                     try:
                         with zip.ZipFile(zfile) as zf:
                             extTo = os.path.join(self.test, folder)
-                            self.extract_single(zf, extTo, file)
+                            self.zip_extract_single(zf, extTo, file)
                     except zip.BadZipFile:
                         print(f"Warning: {user} has invalid zip file!")
 
