@@ -16,13 +16,7 @@
     "percentage": 0.4,
     "prefix": true
   },
-
-  "testbench": {
-    "pwd": "Testbench/",
-    "test": "codes/",
-    "extensions": [".v"]
-  },
-
+  
   "session": {
     "pwd": "Session/",
     "sessions": "Sessions/",

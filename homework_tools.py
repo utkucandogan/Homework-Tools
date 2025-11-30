@@ -2,7 +2,6 @@ import os
 
 from plagiarism import Plagiarism
 from session import Session
-from testbench import TestBench
 class HomeworkTools:
     def __init__(self, config: dict):
         try:
@@ -31,11 +30,6 @@ class HomeworkTools:
                 self.plagiarism = Plagiarism(config["plagiarism"], self.pwd, self.zip_file, self.single_file, self.file_filter)
             else:
                 self.plagiarism = None
-
-            if "testbench" in config:
-                self.testbench = TestBench(config["testbench"], self.pwd, self.single_file, self.file_filter)
-            else:
-                self.testbench = None
 
             if "session" in config:
                 self.session = Session(config["session"], self.pwd, self.single_file)
