@@ -12,8 +12,9 @@
     "reference": "Reference/",
     "boilerplate": "Boilerplate/",
     "extensions": [".v"],
-    "threshold": 50,
-    "percentage": 0.4
+    "threshold": 30,
+    "percentage": 0.4,
+    "prefix": true
   },
 
   "testbench": {

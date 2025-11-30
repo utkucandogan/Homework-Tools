@@ -26,6 +26,7 @@ class Plagiarism:
             self.noise_threshold: int     = config["threshold"]
             self.guarantee_threshold: int = config["threshold"]
             self.display_threshold: float = config["percentage"]
+            self.prefix: bool = config["prefix"]
 
         except KeyError as e:
             raise RuntimeError(f"Config file requires {e} in \"plagiarism\" entry.")
@@ -50,7 +51,10 @@ class Plagiarism:
                     file_name = os.path.basename(file)
                     if not any(filter.casefold() in file_name.casefold() for filter in self.file_filter):
                         continue
-                flatFile = prefix + "%" + file.replace("/", "%").replace("\\", "%")
+                if(self.prefix):
+                    flatFile = prefix + "%" + file.replace("/", "%").replace("\\", "%")
+                else:
+                    flatFile =os.path.basename(file)   
                 targetPath = os.path.join(extTo, flatFile)
                 with zfile.open(file) as source, open(targetPath, "wb") as target:
                     shutil.copyfileobj(source, target)
