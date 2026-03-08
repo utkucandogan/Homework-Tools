@@ -26,7 +26,6 @@
 	"WED1140": ["studentx","studenty"],
 	"THU1040": ["studentx","studenty"],
 	"FRI1340": ["studentx","studenty"]},
-    "table_name_format": "masa{no}",
-	"use_folder_name": false
+    "table_name_format": "masa{no}"
   }
 }
