@@ -70,7 +70,7 @@ class Session:
         extracted_name = extract_name_from_folder(basename)
         student_id = self.id_map.get(normalize(extracted_name))
         
-        search_target = student_id if student_id else filename
+        search_target = student_id if student_id else basename
 
         for session_name, session in self.session_list.items():
             for i, id in enumerate(session):
@@ -108,10 +108,11 @@ class Session:
                 #go over each file in the folder to extract
                 for file in os.listdir(user):
 
-                    print(f"Processing: {file}")
+                    #print(f"Processing: {folder}")
                     filepath = os.path.join(user, file)
                     new_path = ""
                     if id is None:
+                        print(f"ERROR: {folder} not found in session list.")
                         new_path = os.path.join(self.sessions, "ERROR", folder)
                         os.makedirs(new_path, exist_ok=True)
                     else:
